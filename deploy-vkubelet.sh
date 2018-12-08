@@ -9,8 +9,13 @@ RELEASE_NAME=virtual-kubelet
 NODE_NAME=virtual-kubelet
 CHART_URL=https://github.com/virtual-kubelet/virtual-kubelet/raw/master/charts/$VK_RELEASE.tgz
 
-#kubectl create -f tiller-rbac.yaml
-#helm init --upgrade --service-account=tiller
+kubectl create -f tiller-rbac.yaml
+
+# give tiller some time to get ready
+# TODO query status instead of sleep
+
+sleep 30
+helm init --upgrade --service-account=tiller
 
 helm install "$CHART_URL" --name "$RELEASE_NAME" \
   --set provider=azure \

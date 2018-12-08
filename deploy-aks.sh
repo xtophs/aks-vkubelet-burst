@@ -15,6 +15,7 @@ echo Creating AKS cluster ${CLUSTER_NAME}
 az aks create \
     --resource-group ${RG} \
     --name ${CLUSTER_NAME} \
+    --node-vm-size Standard_D2_v2 \
     --node-count 1 \
     --service-principal $appId \
     --client-secret ${pwd} \
