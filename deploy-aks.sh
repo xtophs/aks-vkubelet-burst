@@ -29,6 +29,16 @@ az aks create \
 # get cluster credentials and make new cluster default for kubectl
 az aks get-credentials -n ${CLUSTER_NAME} -g ${RG} 
 
+# upgrade cluster if you want to use 
+# dnsConfig 
+az aks upgrade --kubernetes-version 1.10.9 \
+    --resource-group ${RG} \
+    --name ${CLUSTER_NAME} \
+    --no-wait
+
+# TODO wait for upgrade to complete
+
+
 # create kubernetes secret to access ACR
 kubectl create secret docker-registry regcred \
     --docker-server ${ACR_NAME}.azurecr.io \
