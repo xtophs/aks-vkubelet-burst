@@ -27,7 +27,7 @@ while true; do
     az role assignment create \
         --scope ${vnetId} \
         --assignee ${appId} \
-        --role "Network Contributor"
+        --role "Contributor"
     status=$?
 
     if [ $status -ne 0 ]; then

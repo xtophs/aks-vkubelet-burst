@@ -9,21 +9,12 @@ RELEASE_NAME=virtual-kubelet
 NODE_NAME=virtual-kubelet
 CHART_URL=https://github.com/virtual-kubelet/virtual-kubelet/raw/master/charts/$VK_RELEASE.tgz
 
-kubectl create -f tiller-rbac.yaml
+az extension add \
+  --source https://aksvnodeextension.blob.core.windows.net/aks-virtual-node/aks_virtual_node-0.2.0-py2.py3-none-any.whl
 
-# give tiller some time to get ready
-# TODO query status instead of sleep
-
-sleep 30
-helm init --upgrade --service-account=tiller
-
-helm install "$CHART_URL" --name "$RELEASE_NAME" \
-  --set provider=azure \
-  --set providers.azure.targetAKS=true \
-  --set providers.azure.vnet.enabled=true \
-  --set providers.azure.vnet.subnetName=$ACI_SUBNET_NAME \
-  --set providers.azure.vent.subnetCidr=$ACI_SUBNET_RANGE \
-  --set providers.azure.vnet.clusterCidr=$CLUSTER_SUBNET_RANGE \
-  --set providers.azure.vnet.kubeDnsIp=$KUBE_DNS_IP \
-  --set providers.azure.masterUri=$MASTER_URI
+az aks enable-addons \
+    --resource-group ${RG} \
+    --name ${CLUSTER_NAME} \
+    --addons virtual-node \
+    --subnet-name ${ACI_SUBNET_NAME}
 
